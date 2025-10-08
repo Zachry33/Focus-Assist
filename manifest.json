@@ -6,7 +6,7 @@
 
     "content scripts": [
         {
-            "js": ["scripts/remover.js"],
+            "js": ["scripts/youtube.js"],
             "matches": [
                 "https://www.youtube.com/*"
             ]
