@@ -1,0 +1,16 @@
+{
+    "manifest version": 3,
+    "name": "Focus Assist",
+    "version": 1.0,
+    "description": "Reduce short form content consumption by removing or blocking them from webpages such as youtube",
+
+    "content scripts": [
+        {
+            "js": ["scripts/remover.js"],
+            "matches": [
+                "https://www.youtube.com/*"
+            ]
+        }
+    ]
+
+}
