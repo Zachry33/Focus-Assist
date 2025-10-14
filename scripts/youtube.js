@@ -1,58 +1,67 @@
-//Youtube.js
+// Youtube.js
+/* TODO
+    Improve performance of querySelectorAll by perhaps using getElementByID on id="content"
+    Fix bug of reloaded page in video viewer not finding content element
+    Add url detection changes to stop viewing of shorts
+*/
+
+
 var count = 0;
 let lastRan = Date.now();
 let now;
-const limit = 200;
+const limit = 500;
 let timeoutID;
 
 // Find and remove shorts content on page
 function removeShorts () {
 
     // For shorts navigation sidebar
-    const shortsNav = document.querySelector('[title="Shorts"]');
-    console.log(++count);
-    if (shortsNav) {
-        console.log("hit");
-        shortsNav.remove();
-    }
+    document.querySelectorAll('[title="Shorts"]').forEach(shortsNav => {
+        if (shortsNav) {
+            console.log("hit");
+            shortsNav.remove();
+        }
+    });
 
-    // For shorts in vertical displays
-    const short = document.querySelector('[is-shorts]');
-    console.log(++count);
-    if (short) {
-        console.log("hit");
-        short.remove();
-    }
+    // For shorts in vertical carousels on home page
+    document.querySelectorAll('[is-shorts]').forEach(short => {
+        if (short) {
+            console.log("hit");
+            short.remove();
+        }
+    });
 
     // For shorts using this remix
-    const reel = document.querySelector('[class="style-scope ytd-reel-shelf-renderer"]');
-    console.log(++count);
-    if (reel) {
-        console.log("hit");
-        reel.remove();
-    }
-
-    // For shorts
-    const shortsLockup = document.querySelector('[class="shortsLockupViewModelHost"]');
-    console.log(++count);
-    if (shortsLockup) {
-        console.log("hit");
-        const shortsLockupContainer = shortsLockup.closest('grid-shelf-view-model');
-        if (shortsLockupContainer) {
-            shortsLockupContainer.remove();
+    document.querySelectorAll('[class="style-scope ytd-reel-shelf-renderer"]').forEach(reel => {
+        if (reel) {
+            console.log("hit");
+            reel.remove();
         }
-    }
+    });
 
-    // For videos in the normal video format but are in shorts style
-    const shortsOverlay = document.querySelector('[overlay-style="SHORTS"]');
-    console.log(++count);
-    if (shortsOverlay) {
-        console.log("hit");
-        const shortsOverlayContainer = shortsOverlay.closest('ytd-video-renderer');
-        if (shortsOverlayContainer) {
-            shortsOverlayContainer.remove();
+    // For shorts in vertical carousels after search
+    document.querySelectorAll('[class="shortsLockupViewModelHost"]').forEach(shortsLockup => {
+        if (shortsLockup) {
+            console.log("hit");
+            const shortsLockupContainer = shortsLockup.closest('grid-shelf-view-model');
+            if (shortsLockupContainer) {
+                shortsLockupContainer.remove();
+            }
         }
-    }
+    });
+
+    // For shorts in the normal video thumbnail but are type shorts (has shorts tag on thumbnail)
+    document.querySelectorAll('[overlay-style="SHORTS"]').forEach(shortsOverlay => {
+        if (shortsOverlay) {
+            console.log("hit");
+            const shortsOverlayContainer = shortsOverlay.closest('ytd-video-renderer');
+            if (shortsOverlayContainer) {
+                shortsOverlayContainer.remove();
+            }
+        }
+    });
+
+    console.log(++count);
 }
 
 const observer = new MutationObserver((mutations) => {
