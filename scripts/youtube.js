@@ -3,6 +3,7 @@
     Improve performance of querySelectorAll by perhaps using getElementByID on id="content"
     Fix bug of reloaded page in video viewer not finding content element
     Add url detection changes to stop viewing of shorts
+    Add disconnection of observer after a period of shorts not being loaded as shorts very likly wont be loaded after that
 */
 
 
