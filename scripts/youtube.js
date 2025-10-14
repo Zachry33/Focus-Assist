@@ -11,6 +11,7 @@ function removeNav () {
 
 const observer = new MutationObserver(() => {
     removeNav();
+    removeShorts();
 });
 
 // Start observing
@@ -19,4 +20,17 @@ observer.observe(document.body, {
     subtree: true,
 });
 
+function removeShorts () {
+    const short = document.querySelector('[is-shorts]');
+    if (short) {
+        short.remove();
+    }
+    
+    const reel = document.querySelector('[class="style-scope ytd-reel-shelf-renderer"]')
+    if (reel) {
+        reel.remove();
+    }
+}
+
+removeShorts();
 removeNav();
