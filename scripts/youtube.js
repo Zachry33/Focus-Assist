@@ -1,8 +1,7 @@
 // Youtube.js
 /* TODO
-    Maybe quick check for common triggers
     Add url detection changes to stop viewing of shorts
-    Add disconnection of observer after a period of shorts not being loaded as shorts very likly wont be loaded after that
+    Fix Bug of shorts nav sometimes not getting hit
 */
 
 
@@ -107,26 +106,75 @@ function removeShorts () {
 const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         if (mutation.addedNodes.length > 0) {         
-            throttledRemoval(mutation.addedNodes);
+            throttledRemoval(mutation.addedNodes[0]);
             break;
         }
     }
 });
 
-function throttledRemoval () {
+// Will call the function to remove shorts at most every however long limit is (usually 500ms)
+function throttledRemoval (node) {
     now = Date.now();
     if (now - lastRan > limit) {
         lastRan = now;
-        removeShorts();
+        if (checkCommonTrigger(node)) {
+            removeShorts();
+        }
     }
     else {
         clearTimeout(timeoutID);
         timeoutID = setTimeout(() => {
             lastRan = Date.now();
-            removeShorts();
+            if (checkCommonTrigger(node)) {
+                removeShorts();
+            }
         }, limit - (now - lastRan));
     }
 }
+
+// Checks if mutation is a common trigger unrelated to shorts which are the main ones that run on document idle
+function checkCommonTrigger(node) {
+    if (node.nodeType != Node.ELEMENT_NODE) {
+        return false;
+    }
+    
+    // Hover over a video
+    if (node.tagName == "YT-THUMBNAIL-OVERLAY-BADGE-VIEW-MODEL") {
+        return false;
+    }
+
+    // Empty divs when hovering over a video
+    // Note: Lowercase names here so useing localNames
+    if (node.tagName == "DIV" && node.children.length == 1) {
+        const svgElement = node.firstElementChild;
+        if (svgElement.localName == "svg" && svgElement.children.length == 1) {
+            const pathElement = svgElement.firstElementChild;
+            if (pathElement.localName == "path" && pathElement.children.length == 0) {
+                return false;
+            }
+        }
+    }
+
+    // Hover over description
+    if (node.className == "yt-core-attributed-string--link-inherit-color" || node.className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap") {
+        return false;
+    }
+    
+    // Captions in video playback
+    if (node.className == "caption-visual-line") {
+        return false;
+    }
+
+    // Hover over a video in search
+    if (node.tagName == "YTD-THUMBNAIL-OVERLAY-TOGGLE-BUTTON-RENDERER" || node.className == "yt-icon-shape style-scope yt-icon ytSpecIconShapeHost") {
+        return false;
+    }
+
+    console.log(node);
+    return true;
+}
+
+
 
 
 // Start observing
