@@ -1,5 +1,6 @@
 // Youtube.js
 /* TODO
+    Maybe quick check for common triggers
     Add url detection changes to stop viewing of shorts
     Add disconnection of observer after a period of shorts not being loaded as shorts very likly wont be loaded after that
 */
@@ -73,6 +74,16 @@ function removeShorts () {
             }
         });
     }
+
+    // For shorts in the normal video thumbnail but are type shorts (no shorts tag on thumbnail) ytd-compact-video-renderer 
+    if (pageManager) {
+        pageManager.querySelectorAll('[class="style-scope ytd-compact-video-renderer"]').forEach(shortsThumbnail => {
+            if (shortsThumbnail) {
+                shortsThumbnail.remove();
+            }
+        });
+    }
+
 
     // For removing the shorts filters chip button in search results
     const chipBar = document.getElementById("chip-bar");
