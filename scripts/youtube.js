@@ -167,7 +167,7 @@ function checkCommonTrigger(node) {
     }
 
     // Hover over description
-    if (className == "yt-core-attributed-string--link-inherit-color" || className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" || classname == "yt-core-attributed-string__list-group") {
+    if (className == "yt-core-attributed-string--link-inherit-color" || className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" || className == "yt-core-attributed-string__list-group") {
         return false;
     }
     
