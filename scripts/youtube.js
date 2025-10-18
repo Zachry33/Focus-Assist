@@ -134,6 +134,8 @@ function throttledRemoval (node) {
 
 // Checks if mutation is a common trigger unrelated to shorts which are the main ones that run on document idle
 function checkCommonTrigger(node) {
+
+    // Check node type is actually an element
     if (node.nodeType != Node.ELEMENT_NODE) {
         return false;
     }
@@ -170,11 +172,20 @@ function checkCommonTrigger(node) {
         return false;
     }
 
+    // Quick shorts URL check 
+    urlCheck();
+
     console.log(node);
     return true;
 }
 
-
+// Replace shorts URLs with youtube home page
+function urlCheck() {
+    const URL = location.href;
+    if (URL.startsWith("https://www.youtube.com/shorts/")) {
+        location.replace("https://www.youtube.com");
+    }
+}
 
 
 // Start observing
@@ -187,4 +198,6 @@ observer.observe(content, {
     subtree: true,
 });
 
+// Do a once over check on load
+urlCheck();
 removeShorts();
