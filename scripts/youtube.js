@@ -100,6 +100,17 @@ function removeShorts () {
         });
     }
 
+    // For removing the shorts tab on user pages
+    const tabsInnerContainer = document.getElementById("tabs-inner-container");
+    if (tabsInnerContainer) {
+        tabsInnerContainer.querySelectorAll('[tab-title="Shorts"]').forEach(tab => {
+            if (tab) {
+                console.log("hit");
+                tab.remove();
+            }
+        });
+    }
+
     console.log(++count);
 }
 
@@ -163,7 +174,7 @@ function checkCommonTrigger(node) {
     }
     
     // Captions in video playback
-    if (node.className == "caption-visual-line") {
+    if (node.className == "caption-visual-line" || node.className == "caption-window ytp-caption-window-bottom") {
         return false;
     }
 
