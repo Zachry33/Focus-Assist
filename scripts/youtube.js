@@ -1,9 +1,4 @@
 // Youtube.js
-/* TODO
-    Add url detection changes to stop viewing of shorts
-    Fix Bug of shorts nav sometimes not getting hit
-*/
-
 
 var count = 0;
 let lastRan = Date.now();
@@ -150,15 +145,18 @@ function checkCommonTrigger(node) {
     if (node.nodeType != Node.ELEMENT_NODE) {
         return false;
     }
+
+    const tagName = node.tagName;
+    const className = node.className;
     
     // Hover over a video
-    if (node.tagName == "YT-THUMBNAIL-OVERLAY-BADGE-VIEW-MODEL") {
+    if (tagName == "YT-THUMBNAIL-OVERLAY-BADGE-VIEW-MODEL") {
         return false;
     }
 
     // Empty divs when hovering over a video
     // Note: Lowercase names here so useing localNames
-    if (node.tagName == "DIV" && node.children.length == 1) {
+    if (tagName == "DIV" && node.children.length == 1) {
         const svgElement = node.firstElementChild;
         if (svgElement.localName == "svg" && svgElement.children.length == 1) {
             const pathElement = svgElement.firstElementChild;
@@ -169,24 +167,23 @@ function checkCommonTrigger(node) {
     }
 
     // Hover over description
-    if (node.className == "yt-core-attributed-string--link-inherit-color" || node.className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" || node.classname == "yt-core-attributed-string__list-group") {
+    if (className == "yt-core-attributed-string--link-inherit-color" || className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" || classname == "yt-core-attributed-string__list-group") {
         return false;
     }
     
     // Captions in video playback
-    if (node.className == "caption-visual-line" || node.className == "caption-window ytp-caption-window-bottom") {
+    if (className == "caption-visual-line" || className == "caption-window ytp-caption-window-bottom") {
         return false;
     }
 
     // Hover over a video in search
-    if (node.tagName == "YTD-THUMBNAIL-OVERLAY-TOGGLE-BUTTON-RENDERER" || node.className == "yt-icon-shape style-scope yt-icon ytSpecIconShapeHost") {
+    if (tagName == "YTD-THUMBNAIL-OVERLAY-TOGGLE-BUTTON-RENDERER" || className == "yt-icon-shape style-scope yt-icon ytSpecIconShapeHost") {
         return false;
     }
 
     // Quick shorts URL check 
     urlCheck();
 
-    console.log(node);
     return true;
 }
 
