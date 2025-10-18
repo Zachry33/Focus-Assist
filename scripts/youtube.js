@@ -169,7 +169,7 @@ function checkCommonTrigger(node) {
     }
 
     // Hover over description
-    if (node.className == "yt-core-attributed-string--link-inherit-color" || node.className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap") {
+    if (node.className == "yt-core-attributed-string--link-inherit-color" || node.className == "yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" || node.classname == "yt-core-attributed-string__list-group") {
         return false;
     }
     
