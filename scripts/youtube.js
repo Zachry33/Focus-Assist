@@ -199,7 +199,7 @@ function urlCheck() {
 // Start observing
 let content = document.getElementById("content");
 if (!content) {
-    content = document.body; 
+    content = document; 
 }
 observer.observe(content, {
     childList: true,
