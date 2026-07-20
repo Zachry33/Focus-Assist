@@ -56,6 +56,20 @@ function removeShorts () {
         });
     }
 
+    // For removing the shorts carousel on user pages
+    if (pageManager) {
+        pageManager.querySelectorAll('[class="style-scope ytd-reel-shelf-renderer"]').forEach(reelShelfRenderer => {
+            if (reelShelfRenderer) {
+                console.log("hit");
+                const itemlistRenderer = reelShelfRenderer.closest('ytd-item-section-renderer');
+                if (itemlistRenderer) {
+                    itemlistRenderer.remove();
+                }
+            }
+        });
+    }
+
+
     // For shorts in the normal video thumbnail but are type shorts (has shorts tag on thumbnail)
     if (pageManager) {
         pageManager.querySelectorAll('[overlay-style="SHORTS"]').forEach(shortsOverlay => {
@@ -188,12 +202,20 @@ function checkCommonTrigger(node) {
 }
 
 // Replace shorts URLs with youtube home page
+// Also if url changed then remove shorts
 function urlCheck() {
     const URL = location.href;
     if (URL.startsWith("https://www.youtube.com/shorts/")) {
         location.replace("https://www.youtube.com");
     }
 }
+
+// When youtube finishes navigating
+document.addEventListener('yt-navigate-finish', (event) => {
+    console.log('YouTube navigated:');
+    urlCheck();
+    removeShorts();
+});
 
 
 // Start observing
