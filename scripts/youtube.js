@@ -202,7 +202,6 @@ function checkCommonTrigger(node) {
 }
 
 // Replace shorts URLs with youtube home page
-// Also if url changed then remove shorts
 function urlCheck() {
     const URL = location.href;
     if (URL.startsWith("https://www.youtube.com/shorts/")) {
@@ -212,11 +211,10 @@ function urlCheck() {
 
 // When youtube finishes navigating
 document.addEventListener('yt-navigate-finish', (event) => {
-    console.log('YouTube navigated:');
+    console.log('YouTube navigated');
     urlCheck();
     removeShorts();
 });
-
 
 // Start observing
 let content = document.getElementById("content");
