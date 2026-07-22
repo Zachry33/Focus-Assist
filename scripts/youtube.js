@@ -120,30 +120,34 @@ function removeShorts () {
                 // Adjust the slider position if removed 
                 tabsInnerContainer.querySelectorAll('[class="tabGroupShapeSlider tabGroupShapeSliderTransition"]').forEach(slider => {
                     if (slider) { 
-                        /*
-                        const currentMargin = parseFloat(window.getComputedStyle(slider).marginLeft) || 0;
-                        slider.style.marginLeft = '-24px';
-                        */
+                        // Check parent element is not a wrapper
+                        const parent = slider.parentElement;
+                        const loc = location.href;
+                        const lastSlashIndex = loc.lastIndexOf("/");
+                        if (parent.className != 'wrap') {
+                            const wrapper = document.createElement('div');
+                            // Shift the wrapper instead of slider since slider style is constantly changing)
+                            if (loc.endsWith("/videos") || loc.endsWith("/featured") || (lastSlashIndex != -1 && loc.charAt(lastSlashIndex + 1) == "@")) {
+                                wrapper.style.setProperty('margin-left', '0px');
+                            }
+                            else {
+                                wrapper.style.setProperty('margin-left', '-24px');
+                            }
 
-                        /*
-                        // Get the style text
-                        let styleText = slider.getAttribute('style') || '';
-                        // Extract the number inside translateX(...) using regex
-                        const match = styleText.match(/translateX\(([-?\d.]+)px\)/);
-                        if (match) {
-                            // match[1] is the matched digits e.g. "241"
-                            const currentX = parseFloat(match[1]); 
-                            const newX = currentX - 24;
+                            wrapper.className = 'wrap';
 
-                            //Replace translateX with the updated value
-                            styleText = styleText.replace(
-                                /translateX\([-?\d.]+px\)/, 
-                                `translateX(${newX}px)`
-                            );
-                            //Save back to the attribute
-                            slider.setAttribute('style', styleText);
+                            slider.parentNode.insertBefore(wrapper, slider);
+                            wrapper.appendChild(slider);
                         }
-                        */
+                        // if parent is already a wrapper update it
+                        else {
+                            if (loc.endsWith("/videos") || loc.endsWith("/featured") || (lastSlashIndex != -1 && loc.charAt(lastSlashIndex + 1) == "@")) {
+                                parent.style.setProperty('margin-left', '0px');
+                            }
+                            else {
+                                parent.style.setProperty('margin-left', '-24px');
+                            }
+                        }
                     }
                 });
             }
