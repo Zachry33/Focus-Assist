@@ -115,7 +115,37 @@ function removeShorts () {
         tabsInnerContainer.querySelectorAll('[tab-title="Shorts"]').forEach(tab => {
             if (tab) {
                 console.log("hit");
-                tab.remove();
+                // The tab needs to still exist for other yt functions
+                tab.style.display = 'none';
+                // Adjust the slider position if removed 
+                tabsInnerContainer.querySelectorAll('[class="tabGroupShapeSlider tabGroupShapeSliderTransition"]').forEach(slider => {
+                    if (slider) { 
+                        /*
+                        const currentMargin = parseFloat(window.getComputedStyle(slider).marginLeft) || 0;
+                        slider.style.marginLeft = '-24px';
+                        */
+
+                        /*
+                        // Get the style text
+                        let styleText = slider.getAttribute('style') || '';
+                        // Extract the number inside translateX(...) using regex
+                        const match = styleText.match(/translateX\(([-?\d.]+)px\)/);
+                        if (match) {
+                            // match[1] is the matched digits e.g. "241"
+                            const currentX = parseFloat(match[1]); 
+                            const newX = currentX - 24;
+
+                            //Replace translateX with the updated value
+                            styleText = styleText.replace(
+                                /translateX\([-?\d.]+px\)/, 
+                                `translateX(${newX}px)`
+                            );
+                            //Save back to the attribute
+                            slider.setAttribute('style', styleText);
+                        }
+                        */
+                    }
+                });
             }
         });
     }
