@@ -15,7 +15,6 @@ function removeShorts () {
     if (navBarItems) {
         navBarItems.querySelectorAll('[title="Shorts"]').forEach(shortsNav => {
             if (shortsNav) {
-                console.log("hit");
                 shortsNav.remove();
             }
         });
@@ -26,7 +25,6 @@ function removeShorts () {
     if (pageManager) {
         pageManager.querySelectorAll('[is-shorts]').forEach(short => {
             if (short) {
-                console.log("hit");
                 short.remove();
             }
         });
@@ -37,7 +35,6 @@ function removeShorts () {
     if (related) {
         related.querySelectorAll('[class="style-scope ytd-reel-shelf-renderer"]').forEach(reel => {
             if (reel) {
-                console.log("hit");
                 reel.remove();
             }
         });
@@ -47,7 +44,6 @@ function removeShorts () {
     if (pageManager) {
         pageManager.querySelectorAll('[class="shortsLockupViewModelHost"]').forEach(shortsLockup => {
             if (shortsLockup) {
-                console.log("hit");
                 const shortsLockupContainer = shortsLockup.closest('grid-shelf-view-model');
                 if (shortsLockupContainer) {
                     shortsLockupContainer.remove();
@@ -60,7 +56,6 @@ function removeShorts () {
     if (pageManager) {
         pageManager.querySelectorAll('[class="style-scope ytd-reel-shelf-renderer"]').forEach(reelShelfRenderer => {
             if (reelShelfRenderer) {
-                console.log("hit");
                 const itemlistRenderer = reelShelfRenderer.closest('ytd-item-section-renderer');
                 if (itemlistRenderer) {
                     itemlistRenderer.remove();
@@ -74,7 +69,6 @@ function removeShorts () {
     if (pageManager) {
         pageManager.querySelectorAll('[overlay-style="SHORTS"]').forEach(shortsOverlay => {
             if (shortsOverlay) {
-                console.log("hit");
                 const shortsOverlayContainer = shortsOverlay.closest('ytd-video-renderer');
                 if (shortsOverlayContainer) {
                     shortsOverlayContainer.remove();
@@ -99,7 +93,6 @@ function removeShorts () {
         chipBar.querySelectorAll('[class^="ytChipShapeChip"]').forEach(chipButton => {
             if (chipButton) {
                 if (chipButton.textContent == "Shorts") {
-                    console.log("hit");
                     const shortsFilter = chipButton.closest('chip-shape');
                     if (shortsFilter) {
                         shortsFilter.remove();
@@ -114,7 +107,6 @@ function removeShorts () {
     if (tabsInnerContainer) {
         tabsInnerContainer.querySelectorAll('[tab-title="Shorts"]').forEach(tab => {
             if (tab) {
-                console.log("hit");
                 // The tab needs to still exist for other yt functions
                 tab.style.display = 'none';
                 // Adjust the slider position if removed 
@@ -153,8 +145,6 @@ function removeShorts () {
             }
         });
     }
-
-    console.log(++count);
 }
 
 const observer = new MutationObserver((mutations) => {
@@ -245,7 +235,6 @@ function urlCheck() {
 
 // When youtube finishes navigating
 document.addEventListener('yt-navigate-finish', (event) => {
-    console.log('YouTube navigated');
     urlCheck();
     removeShorts();
 });
