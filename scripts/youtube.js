@@ -159,12 +159,14 @@ const observer = new MutationObserver((mutations) => {
 // Will call the function to remove shorts at most every however long limit is (usually 500ms)
 function throttledRemoval (node) {
     now = Date.now();
+    //Checks to see if the last time remove shorts is greater than the limit and will run it again if it is
     if (now - lastRan > limit) {
         lastRan = now;
         if (checkCommonTrigger(node)) {
             removeShorts();
         }
     }
+    // Otherwise, it will run after 500ms have passed since it last ran
     else {
         clearTimeout(timeoutID);
         timeoutID = setTimeout(() => {
