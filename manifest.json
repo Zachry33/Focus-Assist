@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Focus Assist",
     "version": "1.0",
-    "description": "Reduce short form content consumption by removing or blocking them from webpages such as youtube",
+    "description": "Reduce short form content consumption by removing, blocking and limiting them from webpages such as youtube or twitter",
     
     "icons": {
         "16": "images/icon-16.png",
@@ -16,6 +16,14 @@
             "js": ["scripts/youtube.js"],
             "matches": [
                 "https://www.youtube.com/*"
+            ],
+            "run_at": "document_start"
+        },
+        {
+            "js": ["scripts/twitter.js"],
+            "matches": [
+                "https://twitter.com/*",
+                "https://x.com/*"
             ],
             "run_at": "document_start"
         }

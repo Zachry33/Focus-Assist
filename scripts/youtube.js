@@ -1,10 +1,10 @@
-// Youtube.js
+// youtube.js
 
 var count = 0;
 let lastRan = Date.now();
 let now;
 // min 500ms between removals
-const limit = 500;
+const LIMIT = 500;
 let timeoutID;
 
 // Find and remove shorts content on page
@@ -156,11 +156,11 @@ const observer = new MutationObserver((mutations) => {
     }
 });
 
-// Will call the function to remove shorts at most every however long limit is (usually 500ms)
+// Will call the function to remove shorts at most every however long LIMIT is (usually 500ms)
 function throttledRemoval (node) {
     now = Date.now();
-    //Checks to see if the last time remove shorts is greater than the limit and will run it again if it is
-    if (now - lastRan > limit) {
+    //Checks to see if the last time remove shorts is greater than the LIMIT and will run it again if it is
+    if (now - lastRan > LIMIT) {
         lastRan = now;
         if (checkCommonTrigger(node)) {
             removeShorts();
@@ -174,7 +174,7 @@ function throttledRemoval (node) {
             if (checkCommonTrigger(node)) {
                 removeShorts();
             }
-        }, limit - (now - lastRan));
+        }, LIMIT - (now - lastRan));
     }
 }
 
