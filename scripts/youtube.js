@@ -56,10 +56,7 @@ function removeShorts () {
     if (pageManager) {
         pageManager.querySelectorAll('[class="style-scope ytd-reel-shelf-renderer"]').forEach(reelShelfRenderer => {
             if (reelShelfRenderer) {
-                const itemlistRenderer = reelShelfRenderer.closest('ytd-item-section-renderer');
-                if (itemlistRenderer) {
-                    itemlistRenderer.remove();
-                }
+                reelShelfRenderer.remove();
             }
         });
     }
