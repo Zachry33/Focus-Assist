@@ -11,9 +11,9 @@ function handleTwitterFeed(node) {
     
     console.log(numTweets);
 
-    // If we've been redirected to settings, show the banner and stop tracking feed
-    if (window.location.pathname.includes('/settings') && numTweets > MAX_TWEETS) {
-        showSettingsBanner();
+    // If reached max tweets, just return
+    if (numTweets > MAX_TWEETS) {
+        lockFeed();
         return;
     }
 
@@ -38,33 +38,51 @@ function handleTwitterFeed(node) {
 
     // Once the limit is exceeded, go to settings page
     if (numTweets > MAX_TWEETS) {
-        // Trigger an SPA navigation to settings without a full reload
-        history.pushState({}, "", "/settings/account");
-        window.dispatchEvent(new PopStateEvent("popstate"));
+        lockFeed();
     }
 }
 
-function showSettingsBanner() {
-    // If banner already shown
-    if (document.getElementById("focus-assist-limit-banner")) return;
-
-    // Optional: Hide the main settings content or just show a top banner
-    const banner = document.createElement("div");
-    banner.id = "focus-assist-limit-banner";
-    banner.style.position = "fixed";
-    banner.style.top = "0";
-    banner.style.left = "0";
-    banner.style.width = "100%";
-    banner.style.padding = "20px";
-    banner.style.textAlign = "center";
-    banner.style.fontSize = "18px";
-    banner.style.fontWeight = "bold";
-    banner.style.color = "#ffffff";
-    banner.style.background = "#e0245e";
-    banner.style.zIndex = "999999";
-    banner.innerText = "🛑 Focus Assist: You've reached the limit of 30 tweets";
+// Find the scrollable timeline container and replace it with a static blocker
+function lockFeed() {
     
-    document.body.prepend(banner);
+    observer.disconnect();
+    
+    // Try to find the primary collumn region Twitter scrolls/populates
+    const container =
+        document.querySelector('div[data-testid="primaryColumn"]');
+
+    if (container) {
+       // Make sure the overlay positions relative to this container
+        if (getComputedStyle(container).position === "static") {
+            container.style.position = "relative";
+        }
+        container.prepend(buildBlockerOverlay());
+    }
+
+    // Backstop: prevent page scroll so the user can't trigger anything else nearby
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+}
+
+function buildBlockerOverlay() {
+    const overlay = document.createElement("div");
+    overlay.id = "focus-assist-overlay";
+    overlay.style.position = "absolute";
+    overlay.style.inset = "0";
+    overlay.style.zIndex = "2147483647";
+    overlay.style.background = "#ffffff";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "flex-start";
+    overlay.style.justifyContent = "center";
+    overlay.style.paddingTop = "80px";
+    overlay.style.paddingLeft = "20px";
+    overlay.style.paddingRight = "20px";
+    overlay.style.textAlign = "center";
+    overlay.style.fontSize = "20px";
+    overlay.style.fontWeight = "bold";
+    overlay.style.color = "#536471";
+    overlay.innerText = `You've reached your Focus Assist limit of ${MAX_TWEETS} tweets for this session.`;
+    return overlay;
 }
 
 const observer = new MutationObserver((mutations) => {
