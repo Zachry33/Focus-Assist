@@ -24,6 +24,7 @@ function handleTwitterFeed(node) {
     }
 
     const tweets = document.querySelectorAll('article[data-testid="tweet"]');
+    let tweetsFound = false;
 
     tweets.forEach(tweet => {
         // Obtain the tweet id
@@ -33,13 +34,19 @@ function handleTwitterFeed(node) {
         if (id) {
             if (!seenTweetIds.has(id)) {
                 seenTweetIds.add(id);
-                numTweets++;
+                if (!tweetsFound) {
+                    numTweets++;
+                    tweetsFound = true;
+                }
             }
         } else {
             // Fallback for tweets where an ID cant be found
             if (!tweet.dataset.focusAssistProcessed) {
                 tweet.dataset.focusAssistProcessed = "true";
-                numTweets++;
+                if (!tweetsFound) {
+                    numTweets++;
+                    tweetsFound = true;
+                }
             }
         }
     });
