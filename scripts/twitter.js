@@ -5,6 +5,7 @@ const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
 const MAX_TWEETS = 30;
+const seenTweetIds = new Set();
 
 // Function to process or count tweets
 function handleTwitterFeed(node) {
@@ -23,24 +24,44 @@ function handleTwitterFeed(node) {
     }
 
     const tweets = document.querySelectorAll('article[data-testid="tweet"]');
-    let tweetsFound = false;
 
     tweets.forEach(tweet => {
+        // Obtain the tweet id
+        const id = getTweetId(tweet);
+
         // Check if we've already processed this specific tweet element
-        if (!tweet.dataset.focusAssistProcessed) {
-            tweet.dataset.focusAssistProcessed = "true";
-            if (!tweetsFound) {
+        if (id) {
+            if (!seenTweetIds.has(id)) {
+                seenTweetIds.add(id);
                 numTweets++;
-                tweetsFound = true;
+            }
+        } else {
+            // Fallback for tweets where an ID cant be found
+            if (!tweet.dataset.focusAssistProcessed) {
+                tweet.dataset.focusAssistProcessed = "true";
+                numTweets++;
             }
         }
     });
 
-    // Once the limit is exceeded, go to settings page
+    // Once the limit is exceeded, lock the feed
     if (numTweets > MAX_TWEETS) {
         lockFeed();
     }
 }
+
+// Obtain the tweet Id from the tweet
+function getTweetId(tweet) {
+    // Find the tweets time and the parent element should be the targeted element that contains the anchor element that has the id
+    const timeEl = tweet.querySelector('time');
+    const anchor = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    if (anchor) {
+        const match = anchor.getAttribute('href')?.match(/\/status\/(\d+)/);
+        if (match) return match[1];
+    }
+    return null;
+}
+
 
 // Find the scrollable timeline container and replace it with a static blocker
 function lockFeed() {
