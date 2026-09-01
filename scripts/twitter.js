@@ -4,7 +4,7 @@ let lastRan = Date.now();
 const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
-const MAX_TWEETS = 30;
+const MAX_TWEETS = 5;
 const seenTweetIds = new Set();
 
 // Function to process or count tweets
@@ -72,8 +72,14 @@ function getTweetId(tweet) {
 
 // Find the scrollable timeline container and replace it with a static blocker
 function lockFeed() {
-    
-    observer.disconnect();
+
+    // If the overlay is already present do nothing
+    if (document.getElementById("focus-assist-overlay")) {
+        // Reapply the scroll backstop in case an SPA nav reset it
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        return;
+    }
     
     // Try to find the primary collumn region Twitter scrolls/populates
     const container =
