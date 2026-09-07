@@ -27,6 +27,12 @@ function handleTwitterFeed(node) {
     let tweetsFound = false;
 
     tweets.forEach(tweet => {
+
+        // Check to see if it is an ad which should not count towards the count and shouldnt leave the processed tag
+        if (isPromotedTweet(tweet)) {
+            return;
+        }
+
         // Obtain the tweet id
         const id = getTweetId(tweet);
 
@@ -55,6 +61,16 @@ function handleTwitterFeed(node) {
     if (numTweets > MAX_TWEETS) {
         lockFeed();
     }
+}
+
+// Detect promoted / ad tweets so they are excluded from counting entirely
+function isPromotedTweet(tweet) {
+
+    if (tweet.closest('[data-testid="placementTracking"]')) {
+        return true;
+    }
+ 
+    return false;
 }
 
 // Obtain the tweet Id from the tweet
