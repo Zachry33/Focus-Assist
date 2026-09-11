@@ -4,7 +4,7 @@ let lastRan = Date.now();
 const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
-const MAX_TWEETS = 25;
+const MAX_TWEETS = 20;
 const seenTweetIds = new Set();
 
 // Function to process or count tweets
