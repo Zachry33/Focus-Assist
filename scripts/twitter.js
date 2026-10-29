@@ -5,21 +5,30 @@ const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
 const MAX_TWEETS = 15;
+const LOCK_DURATION = 60 * 60 * 1000; // How long the feed stays locked (ms)
 const seenTweetIds = new Set();
 
 // Function to process or count tweets
 async function handleTwitterFeed(node) {
 
     // Read the shared count so every tab stays in sync
-    const { tweetCount = 0 } = await chrome.storage.local.get("tweetCount");
+    const { tweetCount = 0, unlockTime } = await chrome.storage.local.get(["tweetCount", "unlockTime"]);
     numTweets = tweetCount;
 
     console.log(numTweets);
 
-    // If reached max tweets, just return
+    // If reached max tweets, lock the feed unless the lock period has expired
     if (numTweets > MAX_TWEETS) {
-        lockFeed();
-        return;
+        const overlayShown = document.getElementById("focus-assist-overlay");
+        if (!overlayShown && unlockTime && Date.now() >= unlockTime) {
+            // Lock period is over, reset the count and keep counting
+            await chrome.storage.local.set({ tweetCount: 0 });
+            await chrome.storage.local.remove("unlockTime");
+            numTweets = 0;
+        } else {
+            await startLock(unlockTime);
+            return;
+        }
     }
 
     // If the user clicked into a specific tweet thread, don't count or delete replies
@@ -65,8 +74,16 @@ async function handleTwitterFeed(node) {
 
     // Once the limit is exceeded, lock the feed
     if (numTweets > MAX_TWEETS) {
-        lockFeed();
+        await startLock(unlockTime);
     }
+}
+
+// Lock the feed and record when it should unlock, if not already recorded
+async function startLock(unlockTime) {
+    if (!unlockTime) {
+        await chrome.storage.local.set({ unlockTime: Date.now() + LOCK_DURATION });
+    }
+    lockFeed();
 }
 
 // Detect promoted / ad tweets so they are excluded from counting entirely
