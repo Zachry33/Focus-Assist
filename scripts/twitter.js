@@ -5,7 +5,7 @@ const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
 const MAX_TWEETS = 15;
-const LOCK_DURATION = 60 * 60 * 1000; // How long the feed stays locked (ms)
+const LOCK_DURATION = 60 * 1000; // How long the feed stays locked (ms)
 const seenTweetIds = new Set();
 
 // Function to process or count tweets
