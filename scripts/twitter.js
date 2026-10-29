@@ -81,9 +81,10 @@ async function handleTwitterFeed(node) {
 // Lock the feed and record when it should unlock, if not already recorded
 async function startLock(unlockTime) {
     if (!unlockTime) {
-        await chrome.storage.local.set({ unlockTime: Date.now() + LOCK_DURATION });
+        unlockTime = Date.now() + LOCK_DURATION;
+        await chrome.storage.local.set({ unlockTime });
     }
-    lockFeed();
+    lockFeed(unlockTime);
 }
 
 // Detect promoted / ad tweets so they are excluded from counting entirely
@@ -110,7 +111,7 @@ function getTweetId(tweet) {
 
 
 // Find the scrollable timeline container and replace it with a static blocker
-function lockFeed() {
+function lockFeed(unlockTime) {
 
     // If the overlay is already present do nothing
     if (document.getElementById("focus-assist-overlay")) {
@@ -129,7 +130,7 @@ function lockFeed() {
         if (getComputedStyle(container).position === "static") {
             container.style.position = "relative";
         }
-        container.prepend(buildBlockerOverlay());
+        container.prepend(buildBlockerOverlay(unlockTime));
     }
 
     // Backstop: prevent page scroll so the user can't trigger anything else nearby
@@ -140,7 +141,7 @@ function lockFeed() {
     }
 }
 
-function buildBlockerOverlay() {
+function buildBlockerOverlay(unlockTime) {
     const overlay = document.createElement("div");
     overlay.id = "focus-assist-overlay";
     overlay.style.position = "absolute";
@@ -157,7 +158,8 @@ function buildBlockerOverlay() {
     overlay.style.fontSize = "20px";
     overlay.style.fontWeight = "bold";
     overlay.style.color = "#536471";
-    overlay.innerText = `You've reached your Focus Assist limit of ${MAX_TWEETS} tweets for this session.`;
+    const unlockAt = new Date(unlockTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    overlay.innerText = `You've reached your Focus Assist limit of ${MAX_TWEETS} allowed tweets until ${unlockAt}.`;
     return overlay;
 }
 
