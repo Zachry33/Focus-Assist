@@ -11,6 +11,8 @@
         "128": "images/icon-128.png"
     },
 
+    "permissions": ["storage"],
+
     "content_scripts": [
         {
             "js": ["scripts/youtube.js"],

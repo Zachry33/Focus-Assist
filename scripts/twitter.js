@@ -8,8 +8,12 @@ const MAX_TWEETS = 15;
 const seenTweetIds = new Set();
 
 // Function to process or count tweets
-function handleTwitterFeed(node) {
-    
+async function handleTwitterFeed(node) {
+
+    // Read the shared count so every tab stays in sync
+    const { tweetCount = 0 } = await chrome.storage.local.get("tweetCount");
+    numTweets = tweetCount;
+
     console.log(numTweets);
 
     // If reached max tweets, just return
@@ -26,11 +30,11 @@ function handleTwitterFeed(node) {
     const tweets = document.querySelectorAll('article[data-testid="tweet"]');
     let tweetsFound = false;
 
-    tweets.forEach(tweet => {
+    for (const tweet of tweets) {
 
         // Check to see if it is an ad which should not count towards the count and shouldnt leave the processed tag
         if (isPromotedTweet(tweet)) {
-            return;
+            continue;
         }
 
         // Obtain the tweet id
@@ -43,6 +47,7 @@ function handleTwitterFeed(node) {
                 if (!tweetsFound) {
                     numTweets++;
                     tweetsFound = true;
+                    await chrome.storage.local.set({ tweetCount: numTweets });
                 }
             }
         } else {
@@ -52,10 +57,11 @@ function handleTwitterFeed(node) {
                 if (!tweetsFound) {
                     numTweets++;
                     tweetsFound = true;
+                    await chrome.storage.local.set({ tweetCount: numTweets });
                 }
             }
         }
-    });
+    }
 
     // Once the limit is exceeded, lock the feed
     if (numTweets > MAX_TWEETS) {
@@ -111,7 +117,10 @@ function lockFeed() {
 
     // Backstop: prevent page scroll so the user can't trigger anything else nearby
     document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
+    // Body may not exist yet when the initial run happens at document_start
+    if (document.body) {
+        document.body.style.overflow = "hidden";
+    }
 }
 
 function buildBlockerOverlay() {
