@@ -20,8 +20,9 @@ async function handleTwitterFeed(node) {
     // If reached max tweets, lock the feed unless the lock period has expired
     if (numTweets > MAX_TWEETS) {
         const overlayShown = document.getElementById("focus-assist-overlay");
-        if (!overlayShown && unlockTime && Date.now() >= unlockTime) {
-            // Lock period is over, reset the count and keep counting
+        const lockExpired = unlockTime && (Date.now() >= unlockTime || unlockTime - Date.now() > LOCK_DURATION);
+        if (!overlayShown && lockExpired) {
+            // Session lock is over so reset the count and keep counting
             await chrome.storage.local.set({ tweetCount: 0 });
             await chrome.storage.local.remove("unlockTime");
             numTweets = 0;
