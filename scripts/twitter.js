@@ -7,6 +7,8 @@ let numTweets = 0;
 const MAX_TWEETS = 15;
 const LOCK_DURATION = 60 * 1000; // How long the feed stays locked (ms)
 const seenTweetIds = new Set();
+// Feed pages where tweets count towards the limit (the page itself or any subpath)
+const COUNTED_PATHS = ['/home', '/explore', '/search', '/hashtag', '/i/lists', '/i/communities', '/i/bookmarks', '/i/trending'];
 
 // Function to process or count tweets
 async function handleTwitterFeed(node) {
@@ -32,8 +34,8 @@ async function handleTwitterFeed(node) {
         }
     }
 
-    // If the user is not on main feed then there shouldnt be a limit
-    if (window.location.pathname !== '/home') {
+    // If the user is not on a feed page like the home page then there shouldnt be a limit
+    if (!isCountedPage()) {
         return;
     }
 
@@ -86,6 +88,13 @@ async function startLock(unlockTime) {
         await chrome.storage.local.set({ unlockTime });
     }
     lockFeed(unlockTime);
+}
+
+// Check if the current page is a feed that counts towards the limit
+function isCountedPage() {
+    const path = window.location.pathname;
+    // Match the exact path or a subpath
+    return COUNTED_PATHS.some(p => path === p || path.startsWith(p + '/'));
 }
 
 // Detect promoted / ad tweets so they are excluded from counting entirely
