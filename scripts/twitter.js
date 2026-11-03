@@ -32,8 +32,8 @@ async function handleTwitterFeed(node) {
         }
     }
 
-    // If the user clicked into a specific tweet thread, don't count or delete replies
-    if (window.location.pathname.includes('/status/')) {
+    // If the user is not on main feed then there shouldnt be a limit
+    if (!window.location.pathname !== '/home') {
         return;
     }
 
