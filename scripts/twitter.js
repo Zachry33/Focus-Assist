@@ -33,7 +33,7 @@ async function handleTwitterFeed(node) {
     }
 
     // If the user is not on main feed then there shouldnt be a limit
-    if (!window.location.pathname !== '/home') {
+    if (window.location.pathname !== '/home') {
         return;
     }
 
