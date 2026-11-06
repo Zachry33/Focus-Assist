@@ -5,7 +5,7 @@ const LIMIT = 500;
 let timeoutID;
 let numTweets = 0;
 const MAX_TWEETS = 15;
-const LOCK_DURATION = 60 * 1000; // How long the feed stays locked (ms)
+const LOCK_DURATION = 1000 * 60 * 90; // How long the feed stays locked (ms)
 const seenTweetIds = new Set();
 // Feed pages where tweets count towards the limit (the page itself or any subpath)
 const COUNTED_PATHS = ['/home', '/explore', '/search', '/hashtag', '/i/lists', '/i/communities', '/i/bookmarks', '/i/trending'];
